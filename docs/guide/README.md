@@ -25,34 +25,54 @@ Scikit-decide provides a meaningful API to interact with domains at the expected
 ## Installation
 
 ### 1. Make sure to have a Python 3.7+ environment
+  
+The use of a virtual environment for scikit-decide is recommended, and you will need to ensure the environment use a Python version greater than 3.7.
+This can be achieved either by using [conda](https://docs.conda.io/en/latest/) or by using [pyenv](https://github.com/pyenv/pyenv) (or [pyenv-win](https://github.com/pyenv-win/pyenv-win) on windows) 
+and [venv](https://docs.python.org/fr/3/library/venv.html) module.
 
-The use of a virtual environment for scikit-decide is recommended, e.g. by using [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install):
+The following examples show how to create a virtual environment with Python version 3.8.11 with the mentioned methods. 
 
-    conda create --name skdecide python=3.7
-    conda activate skdecide
+#### With conda (all platforms) 
+ 
+```shell
+conda create -n skdecide python=3.8.11
+conda activate skdecide
+```
 
-### 2. Install the scikit-decide library
+#### With pyenv + venv (Linux/MacOS)
+ 
+```shell
+pyenv install 3.8.11
+pyenv shell 3.8.11
+python -m venv skdecide-venv
+source skdecide-venv
+```   
 
-#### a. Full installation (recommended)
+#### With pyenv-win + venv (Windows)
 
-Make sure you are in the "scikit-decide for Python" root directory and install with Pip:
+```shell
+pyenv install 3.8.11
+pyenv shell 3.8.11
+python -m venv skdecide-venv
+skdecide-venv\Scripts\activate
+```   
 
-    cd YOUR_LOCAL_PATH_TO_GIT_CLONED_SKDECIDE/python
-    pip install .[all]
+### 2. Install scikit-decide library
 
-This will install the core library and additionally all dependencies required by domains/solvers in the hub (scikit-decide catalog).
+#### Full install [Recommended]
 
-Alternatively, if you wish to install only the ones required by domains (resp. solvers) from the hub, replace `[all]` in the last command by `[domains]` (resp. `[solvers]`).
+Install scikit-decide library from PyPI with all dependencies required by domains/solvers in the hub (scikit-decide catalog).
+```shell
+pip install -U pip
+pip install -U scikit-decide[all]
+```
 
-#### b. Minimal installation (not recommended)
-
-Make sure you are in the "scikit-decide for Python" root directory and install with Pip:
-
-    cd YOUR_LOCAL_PATH_TO_GIT_CLONED_SKDECIDE/python
-    pip install .
-
-This will only install the core library, which is enough if you intend to create your own domain and solver.
-
+#### Minimal install  
+Alternatively you can choose to only install the core library, which is enough if you intend to create your own domain and solver.
+```shell
+pip install -U pip
+pip install -U scikit-decide
+```
 ## Getting started
 
 Domain characteristics are one of the key concepts in scikit-decide: they are combined on the one hand to define domains, on the other hand to specify the envelope of domains a solver can tackle.
@@ -172,11 +192,11 @@ These combinations are particularly efficient if you want to try them out:
 - Mountain Car continuous -> CGP: Cartesian Genetic Programming
 - ATARI Pacman -> Random walk
 
-**Warning**: some domains/solvers might require extra manual setup steps to work at 100%. In the future, each scikit-decide hub entry should have a dedicated help page to list them, but in the meantime please refer to this:
-
-- [domain] OpenAI Gym ones -> [gym](http://gym.openai.com/docs/#installation) for loading Gym environments not included by default
-- [solver] PPO: Proximal Policy Optimization -> see [Stable Baselines installation](https://stable-baselines.readthedocs.io/en/master/guide/install.html)
-- [solver] IW: Iterated Width search (same for AOstar, Astar, BFWS) -> special C++ compilation (TBD)
+::: warning
+Some domains/solvers might require extra manual setup steps to work at 100%. 
+In the future, each scikit-decide hub entry might have a dedicated help page to list them, but in the meantime please refer to this:
+- OpenAI Gym domains: [OpenAI Gym](http://gym.openai.com/docs/#installation) for loading Gym environments not included by default (e.g. atari games).
+:::
 
 ## Code generators
 

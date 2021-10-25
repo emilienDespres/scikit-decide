@@ -26,35 +26,181 @@
 
 Scikit-decide is an AI framework for Reinforcement Learning, Automated Planning and Scheduling.
 
+
+* [Installation](#installation)
+  * [Installing the latest release](#installing-the-latest-release)
+     * [1. Make sure to have a Python 3.7+ environment](#1-make-sure-to-have-a-python-37-environment)
+        * [On Linux/MacOS](#on-linuxmacos)
+        * [On Windows](#on-windows)
+     * [2. Install scikit-decide library](#2-install-scikit-decide-library)
+        * [Full install [Recommended]](#full-install-recommended)
+        * [Minimal install](#minimal-install)
+  * [Installing from source [Developer mode]](#installing-from-source-developer-mode)
+* [Documentation](#documentation)
+  * [Online](#online)
+  * [Locally](#locally)
+     * [1. Install the library in developer mode.](#1-install-the-library-in-developer-mode)
+     * [2. Install the documentation dependencies](#2-install-the-documentation-dependencies)
+     * [3. Build the docs](#3-build-the-docs)
+     * [4. Access the documentation](#4-access-the-documentation)
+* [Examples](#examples)
+  * [Playground](#playground)
+* [Unit tests](#unit-tests)
+
+
 ## Installation
 
-### 1. Make sure to have a Python 3.7+ environment
+### Installing the latest release
 
-The use of a virtual environment for scikit-decide is recommended, e.g. by using [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install):
+#### 1. Make sure to have a Python 3.7+ environment
+  
+The use of a virtual environment for scikit-decide is recommended, and you will need to ensure the environment use a Python version greater than 3.7.
+This can be achieved either by using [conda](https://docs.conda.io/en/latest/) or by using [pyenv](https://github.com/pyenv/pyenv) (or [pyenv-win](https://github.com/pyenv-win/pyenv-win) on windows) 
+and [venv](https://docs.python.org/fr/3/library/venv.html) module.
 
-On MacOS/Linux:
+The following examples show how to create a virtual environment with Python version 3.8.11 with the mentioned methods. 
 
-    python3 -m venv /path/to/new/virtual/environment
-    source /path/to/new/virtual/environment/bin/activate
+##### With conda (all platforms) 
+ 
+```shell
+conda create -n skdecide python=3.8.11
+conda activate skdecide
+```
 
-On Windows:
+##### With pyenv + venv (Linux/MacOS)
+ 
+```shell
+pyenv install 3.8.11
+pyenv shell 3.8.11
+python -m venv skdecide-venv
+source skdecide-venv
+```   
 
-    py -m venv \path\to\new\virtual\environment
-    \path\to\new\virtual\environment\Scripts\activate
+##### With pyenv-win + venv (Windows)
 
-### 2. Quick install [Recommended]
+```shell
+pyenv install 3.8.11
+pyenv shell 3.8.11
+python -m venv skdecide-venv
+skdecide-venv\Scripts\activate
+```   
 
-    pip3 install -U pip
-    pip3 install scikit-decide[all]
+#### 2. Install scikit-decide library
 
-### 3. Install from source
+##### Full install [Recommended]
 
-    pip3 install -U pip
-    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+Install scikit-decide library from PyPI with all dependencies required by domains/solvers in the hub (scikit-decide catalog).
+```shell
+pip install -U pip
+pip install -U scikit-decide[all]
+```
+
+##### Minimal install  
+Alternatively you can choose to only install the core library, which is enough if you intend to create your own domain and solver.
+```shell
+pip install -U pip
+pip install -U scikit-decide
+```
+  
+### Installing from source [Developer mode]
+
+> **Disclaimer**: The following process has only been tested on Linux/MacOS platforms.
+
+#### Prerequisites 
+In order to build the library from the source and especially the c++ part, 
+you need a minimal environment with c++ compiler, cmake, and boost. 
+To be able to use parallelism based on openMP, you should also install libomp.
+For instance, on macOS it is done via:
+```shell
+xcode-select --install
+brew install cmake
+brew install boost
+brew install libomp
+```
+
+
+#### Installation with pyenv + poetry
+
+In order to install scikit-decide from the source so that your modification to the library are taken into account, we recommmend using poetry.
+Here are the steps to follow:
+
+- Clone the source and got to the "scikit-decide" root directory.
+    ```shell
     git clone --recurse-submodules -j8 https://github.com/Airbus/scikit-decide.git
     cd scikit-decide
-    poetry install --no-root --extras all
-    poetry build 
+    ```
+    
+- Set proper python version (e.g. 3.8.11) for the scikit-decide project.
+    ```shell
+    pyenv local 3.8.11
+    ```
+  
+- Update pip installer (the one that `pyenv` makes you use).
+    ```shell
+    pip install -U pip
+    ```
+
+- Use poetry to install the project:
+
+    - Install [poetry](https://python-poetry.org/docs/master/#installation).
+        ```shell
+        curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
+        export PATH="$HOME/.local/bin:$PATH"  # add path to poetry
+        ```
+    
+    - Specify to poetry the python version to use so that it creates the appropriate virtual environment.
+        ```shell
+        poetry env use 3.8.11
+        ```
+      
+    - Install all dependencies as defined in `poetry.lock`.
+        ```shell
+        rm -rf build  # removing previous build
+        poetry install --extras all
+        ```
+
+#### Alternate installation with conda + poetry
+
+You can also use conda rather than pyenv. It can be useful when you cannot install poetry via the above method,
+as it can also be installed by conda via the conda-forge channel.
+
+- Clone the source and got to the "scikit-decide" root directory.
+    ```shell
+    git clone --recurse-submodules -j8 https://github.com/Airbus/scikit-decide.git
+    cd scikit-decide
+    ```
+  
+- Create and activate a conda environment with the proper python version for the scikit-decide project.
+    ```shell
+    conda create -n test_dev_skdecide python=3.8.11
+    conda activate test_dev_skdecide
+    ```
+- Update pip installer
+    ```shell
+    pip install -U pip
+    ```
+
+- Install poetry in the environment
+    ```shell
+    conda install -c conda-forge poetry
+    ```
+
+- Install all dependencies as defined in `poetry.lock`.
+    ```shell
+    rm -rf build  # removing previous build
+    poetry install --extras all
+    ```
+
+
+#### Use of developer mode installation
+
+Now you are able to use the library in developer mode (i.e. with code modifications directly taken into account) 
+by prefixing all commands with `poetry run`. 
+For instance:
+
+- to see the list of installed packages: `poetry run pip list`  (NB: you can also use `poetry show`)
+- to run the tutorial script from examples: `poetry run python examples/tutorial.py`
+
 
 ## Documentation
 
@@ -66,7 +212,11 @@ The latest documentation is [available online](https://airbus.github.io/scikit-d
 
 You can also run the documentation locally (e.g. when you are contributing to it or to access an older version).
 
-#### 1. Install the documentation
+#### 1. Install the library in developer mode.
+
+See [above](#installing-from-source-developer-mode) to install scikit-decide with poetry.
+
+#### 2. Install the documentation dependencies
 
 The documentation is using [VuePress](https://v1.vuepress.vuejs.org) to generate an interactive static website.
 
@@ -74,17 +224,30 @@ First, get Yarn (package manager) by following [these installation steps](https:
 
 Make sure you are in the "scikit-decide" root directory and install documentation dependencies:
 
-    cd YOUR_LOCAL_PATH_TO_GIT_CLONED_SKDECIDE
-    yarn install
+```shell
+yarn install
+```
 
-#### 2. Access the documentation
+
+#### 3. Build the docs
+
+Make sure you are in the "scikit-decide" root directory and using the virtual environment where you installed scikit-decide. 
+If you used poetry, that means prepending python commands with `poetry run`.
+Then generate doc with:
+    
+```shell
+poetry run python docs/autodoc.py
+```
+ 
+#### 4. Access the documentation
 
 Make sure you are in the "scikit-decide" root directory and start the local documentation server:
 
-    cd YOUR_LOCAL_PATH_TO_GIT_CLONED_SKDECIDE
-    yarn docs:dev
+```shell
+yarn docs:dev
+```
 
-Open your web browser to access the documentation (by default on http://localhost:8080).
+Open your web browser to access the documentation (by default on http://localhost:8080/scikit-decide/).
 
 ## Examples
 
@@ -124,17 +287,16 @@ These combinations are particularly efficient if you want to try them out:
 - Mountain Car continuous -> CGP: Cartesian Genetic Programming
 - ATARI Pacman -> Random walk
 
-**Warning**: some domains/solvers might require extra manual setup steps to work at 100%. In the future, each scikit-decide hub entry might have a dedicated help page to list them, but in the meantime please refer to this:
-
-- [domain] OpenAI Gym ones -> [gym](http://gym.openai.com/docs/#installation) for loading Gym environments not included by default
-- [solver] PPO: Proximal Policy Optimization -> see [Stable Baselines installation](https://stable-baselines.readthedocs.io/en/master/guide/install.html)
-- [solver] IW: Iterated Width search (same for AOstar, Astar, BFWS) -> special C++ compilation (see Installation 2.c. above)
+> **Warning**: some domains/solvers might require extra manual setup steps to work at 100%. 
+> In the future, each scikit-decide hub entry might have a dedicated help page to list them, but in the meantime please refer to this:
+> - OpenAI Gym domains: [OpenAI Gym](http://gym.openai.com/docs/#installation) for loading Gym environments not included by default (e.g. atari games).
 
 ## Unit tests
 
-Pytest is required to run unit tests (`pip install pytest`).
+Pytest is required to run unit tests. Providing you installed the library in developer mode as described [above](#installing-from-source-developer-mode), it should have been already installed by poetry.
 
-Make sure you are in the "scikit-decide" root directory and run unit tests (the "-v" verbose mode is optional but gives additional details):
+From the "scikit-decide" root directory, run unit tests (the "-v" verbose mode is optional but gives additional details) with:
 
-    cd YOUR_LOCAL_PATH_TO_GIT_CLONED_SKDECIDE
-    poetry run pytest -vv -s tests/solvers/cpp
+ ```shell
+ poetry run pytest -vv -s tests/solvers/cpp
+ ```
