@@ -9,8 +9,11 @@ jobs:
   build:
     strategy:
       fail-fast: false
+      # matrix:
+      #   os: [windows-2016, macos-10.15, ubuntu-latest]
+      #   python-version: [3.7, 3.8]
       matrix:
-        os: [windows-2016, macos-10.15, ubuntu-latest]
+        os: [macos-10.15]
         python-version: [3.7, 3.8]
     defaults:
       run:
@@ -21,6 +24,8 @@ jobs:
       BOOST_ROOT: ${{github.workspace}}/3rdparty/boost
       BOOST_URL: https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.bz2
       SKDECIDE_SKIP_DEPS: 1
+################################################################
+      CCACHE_DIR: ${{github.workspace}}/3rdparty/ccache
 
     steps:
       - name: Checkout scikit-decide source code
@@ -86,6 +91,18 @@ jobs:
         if: matrix.os == 'macos-10.15'
         run: brew install libomp
 
+#############################################################
+
+      - name: Install & setup ccache on Macos
+        if: matrix.os == 'macos-10.15'
+        run: |
+          brew install ccache
+          ccache --set-config cache_dir = ${CCACHE_DIR}
+          ccache --set-config compression_level = 0
+          ccache --show-config
+
+
+##########################################################""
       - name: Build macOS/Windows wheel
         if: matrix.os != 'ubuntu-latest'
         run: |
