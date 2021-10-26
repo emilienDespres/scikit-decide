@@ -21,6 +21,7 @@ jobs:
       BOOST_ROOT: ${{github.workspace}}/3rdparty/boost
       BOOST_URL: https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.bz2
       SKDECIDE_SKIP_DEPS: 1
+      CCACHE_DIR: ${{github.workspace}}/3rdparty/ccache
 
     steps:
       - name: Checkout scikit-decide source code
@@ -85,6 +86,21 @@ jobs:
       - name: Install boost & omp on MacOS
         if: matrix.os == 'macos-10.15'
         run: brew install libomp
+
+      - name: Install & setup ccache on Macos
+        if: matrix.os == 'macos-10.15'
+        run: |
+          brew install ccache
+          ccache --set-config cache_dir=${CCACHE_DIR}
+          ccache --set-config max_size=80.0M
+
+      - name: Restore Ccache cache
+        uses: actions/cache@v2.1.4
+        id: cache-ccache
+        with:
+          path: ${{env.CCACHE_DIR}}
+          key: ccache-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('cpp/cmake', 'cpp/CMakeLists.txt', 'cpp/config.h.in', 'cpp/sdk', 'cpp/src', 'cpp/tests') }}
+          restore-keys: ccache-${{ runner.os }}-py${{ matrix.python-version }}-
 
       - name: Build macOS/Windows wheel
         if: matrix.os != 'ubuntu-latest'

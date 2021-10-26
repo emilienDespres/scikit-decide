@@ -93,6 +93,8 @@ class ExtensionBuilder(build_ext):
         configure_args = [
             f"-DCMAKE_BUILD_TYPE={ext.cmake_build_type}",
             f"-DCMAKE_INSTALL_PREFIX:PATH={cmake_install_prefix}",
+            f"DCMAKE_CXX_COMPILER_LAUNCHER=ccache",
+            f"DCMAKE_C_COMPILER_LAUNCHER=ccache"
         ]
 
         # Extend configure arguments with those from the extension
