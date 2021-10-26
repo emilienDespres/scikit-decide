@@ -2,6 +2,7 @@
 set -ex
 
 yum install -y git zlib-devel
+yum install -y ccache
 
 for PYTHON_VER in 3.7 3.8; do
     python$PYTHON_VER -m pip install --upgrade -q pip
