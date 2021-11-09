@@ -2,8 +2,6 @@ ARG BASE_IMAGE=skdecide_dev
 
 FROM $BASE_IMAGE as build
 
-ENV PLAT=manylinux2014_x86_64
-
 RUN mkdir -p /io/
 COPY . /io/
 WORKDIR /io/
