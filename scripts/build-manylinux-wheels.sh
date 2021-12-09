@@ -43,12 +43,10 @@ for PYBIN in /opt/python/cp${PYTHON_VERSION/./}*/bin; do
     (cd /io/ && rm -rf build)
 done
 
-echo $PLAT
-
 # Wheels aren't considered manylinux unless they have been through
 # auditwheel. Audited wheels go in /io/dist/.
 mkdir -p /io/dist/
 
 for whl in /io/temp-wheels/*.whl; do
-    auditwheel repair "$whl" --plat $PLAT -w /io/dist/
+    auditwheel repair "$whl" -w /io/dist/
 done
